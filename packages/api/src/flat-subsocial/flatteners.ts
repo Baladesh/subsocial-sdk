@@ -3,9 +3,9 @@ import { AccountId } from '@polkadot/types/interfaces/runtime'
 import { bool } from '@polkadot/types/primitive'
 import { SocialAccountWithId } from '@subsocial/types'
 import { Content, Post, Space, SpacePermissionSet, SpacePermissions, WhoAndWhen } from '@subsocial/types/substrate/interfaces'
-import { notEmptyObj } from '@subsocial/utils'
+import { bnToId, notEmptyObj } from '@subsocial/utils'
 import BN from 'bn.js'
-import { CommonContent, EntityData, EntityId } from './dto'
+import { CommonContent, EntityData, EntityId, SpaceId } from './dto'
 import { SpacePermissionKey, SpacePermissionMap, SpacePermissions as FlatSpacePermissions, SpacePermissionsKey } from '@subsocial/types/substrate/rpc'
 
 type Id = string
@@ -126,14 +126,15 @@ type SocialAccountStruct = HasId & {
   followingSpacesCount: number
   reputation: number
   hasProfile: boolean
+  profile?: SpaceId
 }
 
 // TODO rename to SocialAccount or AnonProfileStruct?
 /** Flat representation of a social account that does not have a profile content. */
-export type ProfileStruct = SocialAccountStruct & Partial<FlatSuperCommon>
+export type ProfileStruct = SocialAccountStruct
 
 /** Flat representation of a social account that created a profile content. */
-export type PublicProfileStruct = SocialAccountStruct & FlatSuperCommon
+export type PublicProfileStruct = SocialAccountStruct
 
 type SuperCommonStruct = {
   created: WhoAndWhen
@@ -363,11 +364,8 @@ export function asPublicProfileStruct (profile: ProfileStruct): PublicProfileStr
 }
 
 export function flattenProfileStruct (struct: SocialAccountWithId): ProfileStruct {
-  const profile = struct.profile?.unwrapOr(undefined)
+  const profile = struct.profile?.unwrapOr(undefined)?.toString()
   const hasProfile = struct.profile?.isSome
-  const maybeProfile: Partial<FlatSuperCommon> = profile
-    ? flattenCommonFields(profile)
-    : {}
 
   return {
     id: struct.id.toString(),
@@ -378,7 +376,7 @@ export function flattenProfileStruct (struct: SocialAccountWithId): ProfileStruc
     reputation: struct.reputation.toNumber(),
 
     hasProfile,
-    ...maybeProfile
+    profile
   }
 }
 

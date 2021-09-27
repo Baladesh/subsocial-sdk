@@ -182,22 +182,10 @@ export interface PostUpdate extends Struct {
   readonly hidden: Option<bool>;
 }
 
-/** @name Profile */
-export interface Profile extends Struct {
-  readonly created: WhoAndWhen;
-  readonly updated: Option<WhoAndWhen>;
-  readonly content: Content;
-}
-
 /** @name ProfileHistoryRecord */
 export interface ProfileHistoryRecord extends Struct {
   readonly edited: WhoAndWhen;
   readonly old_data: ProfileUpdate;
-}
-
-/** @name ProfileUpdate */
-export interface ProfileUpdate extends Struct {
-  readonly content: Option<Content>;
 }
 
 /** @name Reaction */
@@ -279,7 +267,7 @@ export interface SocialAccount extends Struct {
   readonly following_accounts_count: u16;
   readonly following_spaces_count: u16;
   readonly reputation: u32;
-  readonly profile: Option<Profile>;
+  readonly profile: Option<SpaceId>;
 }
 
 /** @name Space */

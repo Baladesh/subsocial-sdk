@@ -171,15 +171,7 @@ export default {
       following_accounts_count: 'u16',
       following_spaces_count: 'u16',
       reputation: 'u32',
-      profile: 'Option<Profile>'
-    },
-    Profile: {
-      created: 'WhoAndWhen',
-      updated: 'Option<WhoAndWhen>',
-      content: 'Content'
-    },
-    ProfileUpdate: {
-      content: 'Option<Content>'
+      profile: 'Option<SpaceId>'
     },
     ReactionId: 'u64',
     ReactionKind: {
