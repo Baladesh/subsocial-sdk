@@ -182,12 +182,6 @@ export interface PostUpdate extends Struct {
   readonly hidden: Option<bool>;
 }
 
-/** @name ProfileHistoryRecord */
-export interface ProfileHistoryRecord extends Struct {
-  readonly edited: WhoAndWhen;
-  readonly old_data: ProfileUpdate;
-}
-
 /** @name Reaction */
 export interface Reaction extends Struct {
   readonly id: ReactionId;

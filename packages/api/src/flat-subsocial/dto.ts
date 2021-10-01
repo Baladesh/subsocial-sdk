@@ -21,7 +21,6 @@ export type SummarizedContent = {
 export type DerivedContent<C extends sub.CommonContent> = C & SummarizedContent
 
 export type CommonContent = sub.CommonContent & SummarizedContent
-export type ProfileContent = DerivedContent<sub.ProfileContent>
 export type SpaceContent = DerivedContent<sub.SpaceContent>
 export type PostContent = DerivedContent<sub.PostContent>
 export type CommentContent = DerivedContent<sub.CommentContent>
@@ -37,7 +36,11 @@ export type EntityData<S extends HasId, C extends CommonContent> = {
   content?: C
 }
 
-export type ProfileData = EntityData<ProfileStruct, ProfileContent>
+export type ProfileData = {
+  socialAccount: ProfileStruct,
+  space: SpaceStruct,
+  content: SpaceContent
+}
 export type SpaceData = EntityData<SpaceStruct, SpaceContent>
 export type PostData = EntityData<PostStruct, PostContent>
 export type CommentData = EntityData<CommentStruct, CommentContent>

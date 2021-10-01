@@ -3,7 +3,7 @@ import { SpaceData, CommonData, PostData, ProfileData } from '@subsocial/types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
-import { Space, Post } from '@subsocial/types/substrate/interfaces';
+import { Space, Post, SocialAccount, SpaceId } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
 import { getCidsOfStructs, getIpfsCidOfStruct, SubsocialIpfsApi } from '../ipfs';
 import { SubsocialSubstrateApi } from '../substrate';
@@ -96,16 +96,35 @@ export class BasicSubsocialApi {
   }
   /** Find and load an array of profiles */
   async findProfiles (ids: AnyAccountId[]): Promise<ProfileData[]> {
-    const findStructs = this.substrate.findSocialAccounts.bind(this.substrate)
-    const findContents = this.ipfs.findProfiles.bind(this.ipfs)
+    const socialAccounts = await this.substrate.findSocialAccounts(ids)
+    const spaceIds: SpaceId[] = []
 
-    const profiles = await this.findDataArray<AnyAccountId, SocialAccountWithId, ProfileContent>(
-      ids, findStructs, findContents
-    ) as ProfileData[]
+    socialAccounts.forEach(x => {
+      if (x.profile.isSome) {
+        const spaceId = x.profile.unwrap()
+        spaceIds.push(spaceId)
+      }
+    })
 
-    return profiles.map(x => {
-      const profile = x.struct.profile.unwrapOr(undefined)
-      return { ...x, profile }
+    const spaces = await this.findSpaces({ ids: spaceIds })
+
+    const spaceBySpaceId = new Map<string, SpaceData>()
+
+    spaces.forEach(x => {
+      spaceBySpaceId.set(x.struct.id.toString(), x)
+    })
+
+
+    return socialAccounts.map(x => {
+      const maybeSpaceId = x.profile.unwrapOr(undefined)?.toString()
+
+      const maybeSpaceData = maybeSpaceId ? spaceBySpaceId.get(maybeSpaceId) : undefined
+      
+      return {
+        socialAccount: x,
+        space: maybeSpaceData?.struct,
+        content: maybeSpaceData?.content
+      }
     })
   }
 

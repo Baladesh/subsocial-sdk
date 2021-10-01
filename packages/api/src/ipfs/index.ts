@@ -7,15 +7,6 @@ import { Content } from '@subsocial/types/substrate/classes';
 import { SubsocialContext, ContentResult, UseServerProps } from '../types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
 
-/** Return IPFS cid by social account struct */
-export function getIpfsCidOfSocialAccount (struct: SocialAccountWithId): string | undefined {
-  const profile = struct?.profile
-  if (profile && profile.isSome) {
-    return getIpfsCidOfStruct(profile.unwrap())
-  }
-  return undefined
-}
-
 type HasContentField = {
   content: Content
 }
@@ -26,9 +17,8 @@ type HasIpfsCidSomewhere = HasContentField | SocialAccountWithId
 export function getIpfsCidOfStruct<S extends HasIpfsCidSomewhere> (struct: S): string | undefined {
   if (isIpfs((struct as HasContentField).content)) {
     return (struct as HasContentField).content.asIpfs.toString()
-  } else if ((struct as SocialAccountWithId).profile) {
-    return getIpfsCidOfSocialAccount(struct as SocialAccountWithId)
   }
+  
   return undefined
 }
 
@@ -76,7 +66,7 @@ export class SubsocialIpfsApi {
       // Test IPFS Node connection by requesting its version
       const res = await this.ipfsNodeRequest('version')
       log.info('Connected to IPFS Node with version ', res.data.version)
-    } catch (err) {
+    } catch (err: any) {
       log.error('Failed to connect to IPFS node:', err.stack)
     }
   }

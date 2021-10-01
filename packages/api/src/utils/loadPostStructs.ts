@@ -142,8 +142,8 @@ async function loadRelatedStructs (posts: PostData[], finders: FindStructsFns, o
   if (withOwner) {
     const owners = await findProfiles(ownerIds)
 
-    owners.forEach(owner => {
-      const ownerId = owner.profile?.created.account.toString()
+    owners.forEach((owner, i) => {
+      const ownerId = ownerIds[i].toString()
       ownerId && ownerByIdMap.set(ownerId, owner)
     })
   }

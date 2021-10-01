@@ -162,10 +162,6 @@ export default {
       parent_id: 'Option<PostId>',
       root_post_id: 'PostId'
     },
-    ProfileHistoryRecord: {
-      edited: 'WhoAndWhen',
-      old_data: 'ProfileUpdate'
-    },
     SocialAccount: {
       followers_count: 'u32',
       following_accounts_count: 'u16',

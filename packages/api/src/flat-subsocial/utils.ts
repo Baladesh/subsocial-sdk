@@ -8,10 +8,10 @@ import {
   PostWithAllDetails as OldPostWithAllDetails,
   CommonContent,
   PostContent,
-  SpaceContent,
 } from '@subsocial/types'
 import {
   EntityId,
+  SpaceContent,
   ProfileData,
   SpaceData,
   PostData,
@@ -28,15 +28,13 @@ export function asCommentData (postData: PostData): CommentData {
 }
 
 export function convertToNewProfileData (old: OldProfileData): ProfileData {
-  const struct = flattenProfileStruct(old.struct)
-  return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
+  const socialAccount = flattenProfileStruct(old.socialAccount)
+  const space = flattenSpaceStruct(old.space!)
+  return { socialAccount, space, content: convertToDerivedContent(old.content!) as SpaceContent }
 }
 
 export function convertToNewProfileDataArray (oldArr: OldProfileData[]): ProfileData[] {
-  return oldArr.map((old) => {
-    const struct = flattenProfileStruct(old.struct)
-    return { id: struct.id, struct, content: convertToDerivedContent(old.content!) }
-  })
+  return oldArr.map(convertToNewProfileData)
 }
 
 export function convertToNewSpaceData (old: OldSpaceData): SpaceData {

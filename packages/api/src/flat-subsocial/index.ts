@@ -14,10 +14,13 @@ import { FindPostQuery, FindPostsQuery, FindPostsWithDetailsQuery, FindSpaceQuer
 import { AnyAccountId } from '@subsocial/types'
 import { SubsocialApi } from '../subsocial'
 import { ProfileData, SpaceData, PostData, PostWithSomeDetails, PostWithAllDetails, AnyId } from './dto'
+import { flattenProfileStructs, ProfileStruct } from './flatteners'
+import { idsToBns, idToBn } from '@subsocial/utils'
 
 export interface IFlatSubsocialApi {
   findProfile: (id: AnyAccountId) => Promise<ProfileData | undefined>
   findProfiles: (ids: AnyAccountId[]) => Promise<ProfileData[]>
+  findSocialAccounts: (ids: AnyAccountId[]) => Promise<ProfileStruct[]>
 
   findSpace: (query: FindSpaceQuery) => Promise<SpaceData | undefined>
   findPublicSpaces: (ids: AnyId[]) => Promise<SpaceData[]>
@@ -49,6 +52,10 @@ export class FlatSubsocialApi implements IFlatSubsocialApi {
     return convertToNewProfileDataArray(
        await this.subsocial.findProfiles(ids)
     )
+  }
+
+  public async findSocialAccounts (ids: AnyAccountId[]) {
+    return flattenProfileStructs(await this.subsocial.substrate.findSocialAccounts(ids))
   }
   
   public async findSpace (query: FindSpaceQuery) {
@@ -114,13 +121,4 @@ export class FlatSubsocialApi implements IFlatSubsocialApi {
        await this.subsocial.findUnlistedPostsWithAllDetails(idsToBns(ids))
     )
   }
-}
-
-function idsToBns(ids: AnyId[]): import("@subsocial/types").AnySpaceId[] {
-  throw new Error('Function not implemented.')
-}
-
-
-function idToBn(id: AnyId): import("@subsocial/types").AnyPostId {
-  throw new Error('Function not implemented.')
 }

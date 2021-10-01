@@ -1,4 +1,4 @@
-import { Space, Post, SocialAccount, Profile } from '../substrate/interfaces';
+import { Space, Post, SocialAccount, SpaceId } from '../substrate/interfaces';
 import { CommonContent, SpaceContent, PostContent, CommentContent, ProfileContent } from '../offchain'
 import { CommonStruct } from '../substrate';
 import { AccountId } from '@polkadot/types/interfaces';
@@ -15,8 +15,10 @@ export type SocialAccountWithId = SocialAccount &  {
 export type SpaceData = CommonData<Space, SpaceContent>
 export type PostData = CommonData<Post, PostContent>
 export type CommentData = CommonData<Post, CommentContent>
-export type ProfileData = CommonData<SocialAccountWithId, ProfileContent> & {
-  profile?: Profile
+export type ProfileData = {
+  socialAccount: SocialAccountWithId,
+  space?: Space
+  content?: SpaceContent
 }
 
 export type AnySubsocialData = SpaceData | PostData | CommentData | ProfileData;
