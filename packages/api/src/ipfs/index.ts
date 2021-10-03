@@ -1,5 +1,5 @@
 import { IpfsCid as RuntimeIpfsCid } from '@subsocial/types/substrate/interfaces';
-import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid, ProfileContent } from '@subsocial/types/offchain';
+import { CommonContent, SpaceContent, PostContent, CommentContent, CID, IpfsCid } from '@subsocial/types/offchain';
 import { newLogger, pluralize, isEmptyArray, nonEmptyStr } from '@subsocial/utils';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getUniqueIds, isIpfs, asIpfsCid } from '../utils/common';
@@ -198,21 +198,6 @@ export class SubsocialIpfsApi {
     return this.getContentArray(cids, 'comment')
   }
 
-  /**
-   * Find and load an array of off-chain information about profiles from IPFS by a given array of `cids`.
-   *
-   * Profile information only exists if there is a corresponding JSON file that represents the profiles' content on
-   * IPFS.
-   *
-   * @param cids - An array of IPFS content ids of desired profiles.
-   *
-   * @returns An array of data about desired profiles from IPFS. If no corresponding profiles to given array of `cids`,
-   * an empty array is returned.
-   */
-  async findProfiles (cids: IpfsCid[]): Promise<ContentResult<ProfileContent>> {
-    return this.getContentArray(cids, 'account')
-  }
-
   // ---------------------------------------------------------------------
   // Find single
 
@@ -260,21 +245,6 @@ export class SubsocialIpfsApi {
    */
   async findComment (cid: IpfsCid): Promise<CommentContent | undefined> {
     return this.getContent<CommentContent>(cid, 'comment')
-  }
-
-  /**
-   * Find and load off-chain information about a profile from IPFS by a given `cid`.
-   *
-   * Profile information only exists if there is a corresponding JSON file that represents the profile's content on
-   * IPFS.
-   *
-   * @param cid - IPFS content id of a desired profile.
-   *
-   * @returns Data about a desired profile from IPFS. If no corresponding profiles to given `id`, `undefined` is
-   * returned.
-   */
-  async findProfile (cid: IpfsCid): Promise<ProfileContent | undefined> {
-    return this.getContent<ProfileContent>(cid, 'account')
   }
 
   // ---------------------------------------------------------------------

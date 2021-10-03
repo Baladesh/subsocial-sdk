@@ -1,7 +1,7 @@
 import { ApiPromise as SubstrateApi } from '@polkadot/api';
 import { SpaceData, CommonData, PostData, ProfileData } from '@subsocial/types';
 import { SocialAccountWithId } from '@subsocial/types/dto';
-import { SpaceContent, CommonContent, IpfsCid, PostContent, ProfileContent } from '@subsocial/types/offchain';
+import { SpaceContent, CommonContent, IpfsCid, PostContent } from '@subsocial/types/offchain';
 import { AnyAccountId, AnySpaceId, AnyPostId, CommonStruct } from '@subsocial/types/substrate';
 import { Space, Post, SocialAccount, SpaceId } from '@subsocial/types/substrate/interfaces';
 import { getFirstOrUndefined } from '@subsocial/utils';
@@ -121,7 +121,7 @@ export class BasicSubsocialApi {
       const maybeSpaceData = maybeSpaceId ? spaceBySpaceId.get(maybeSpaceId) : undefined
       
       return {
-        socialAccount: x,
+        struct: x,
         space: maybeSpaceData?.struct,
         content: maybeSpaceData?.content
       }

@@ -36,10 +36,8 @@ export type EntityData<S extends HasId, C extends CommonContent> = {
   content?: C
 }
 
-export type ProfileData = {
-  socialAccount: ProfileStruct,
+export type ProfileData = EntityData<ProfileStruct, SpaceContent> & {
   space: SpaceStruct,
-  content: SpaceContent
 }
 export type SpaceData = EntityData<SpaceStruct, SpaceContent>
 export type PostData = EntityData<PostStruct, PostContent>
