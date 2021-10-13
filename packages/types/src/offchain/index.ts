@@ -39,10 +39,11 @@ type ContentFormat = {
 export type SpaceContent = ContentFormat & {
   name: string
   about: string
-  image: string
-  email: string
-  tags: string[]
-  links: string[] | NamedLink[]
+  image?: string,
+  avatar?: string,
+  email?: string
+  tags?: string[]
+  links?: string[] | NamedLink[]
 }
 
 type CommonPostContent = ContentFormat & {
@@ -61,8 +62,8 @@ export type MetaItem = SubstrareProposal
 
 export type PostContent = CommonPostContent & {
   title: string
-  image: string
-  tags: string[]
+  image?: string
+  tags?: string[]
   canonical: string
   link?: string
   meta?: MetaItem[]
